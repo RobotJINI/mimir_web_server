@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import weather_measurement_pb2 as weather__measurement__pb2
+import model.weather_measurement_pb2 as weather__measurement__pb2
 
 
 class WeatherServerStub(object):
