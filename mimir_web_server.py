@@ -14,7 +14,8 @@ class MimirWebServer:
         self._weather_grpc_client = WeatherGrpcClient()
         
         self._current_weather_module = modules.current_weather.CurrentWeather()
-        self._current_weather_block = getattr(self._current_weather_module, 'make_plot')({})
+        
+        self._current_weather_block = getattr(self._current_weather_module, 'make_plot')("Updating...")
         
         curdoc().add_root(
             column(
@@ -26,7 +27,9 @@ class MimirWebServer:
         curdoc().title = "Mimir Weather Station"
         
     def update(self):
-        self._weather_grpc_client.get_update()
+        response = self._weather_grpc_client.get_update()
+        getattr(self._current_weather_module, 'update_plot')(response)
+        print(f'response:{response}')
         
         
 mimir_web_server = MimirWebServer()

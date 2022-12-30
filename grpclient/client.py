@@ -22,7 +22,6 @@ class WeatherGrpcClient:
             start_time = end_time - 10000
         
         response = self._stub.get_current_weather(weather_measurement_pb2.CurrentWeatherRequest(duration=int(120)))
-        print(f'response:{response}')
         return response
     
     def _get_time_ms(self):

@@ -15,20 +15,14 @@ class CurrentWeather(ModuleBase):
         self.title = None
         
     def make_plot(self, dataframe):
-        self.source = ColumnDataSource(data={})
-        self.title = Paragraph(text="penis")
-        self.data_table = DataTable(source=self.source, width=390, height=275, columns=[
-            TableColumn(field="zipcode", title="Zipcodes", width=100),
-            TableColumn(field="population", title="Population", width=100, formatter=NumberFormatter(format="0,0")),
-            TableColumn(field="state_code", title="State")
-        ])
-        return column(self.title, self.data_table)
+        self.cur_weather = Paragraph(text=f'{dataframe}')
+        return self.cur_weather
 
     def update_plot(self, dataframe):
-        self.source.data.update(dataframe)
+        self.cur_weather.text = f'{dataframe}'
 
     def busy(self):
-        self.title.text = 'Updating...'
+        pass
 
     def unbusy(self):
-        self.title.text = TITLE
+        pass

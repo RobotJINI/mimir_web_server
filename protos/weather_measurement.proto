@@ -24,7 +24,7 @@ message Measurement {
 	string wind_speed = 8;
 	string rainfall = 9;
     string rain_rate = 10;
-	int32 wind_dir = 11;
+	string wind_dir = 11;
 }
 
 message MeasurementResponse {
@@ -43,7 +43,7 @@ message CurrentWeatherResponse {
 	string wind_gust = 9;
 	string rainfall = 10;
     string rain_rate = 11;
-	int32 wind_dir = 12;
+	string wind_dir = 12;
 }
 
 message CurrentWeatherRequest {
