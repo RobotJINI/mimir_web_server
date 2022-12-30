@@ -22,7 +22,7 @@ class MimirWebServer:
                 )
             )
         
-        curdoc().add_periodic_callback(self.update, 1000)
+        curdoc().add_periodic_callback(self.update, 5000)
         curdoc().title = "Mimir Weather Station"
         
     def update(self):
