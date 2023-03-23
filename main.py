@@ -16,7 +16,7 @@ from grpclient.client import WeatherGrpcClient
 
 class MimirWebServer:
     def __init__(self):
-        self._weather_grpc_client = WeatherGrpcClient(ip='192.168.10.179')
+        self._weather_grpc_client = WeatherGrpcClient(ip='192.168.10.102')
 
         self._current_weather_module = CurrentWeather()
         self._current_weather_block = self._current_weather_module.make_plot('Updating....')
@@ -46,6 +46,7 @@ class MimirWebServer:
 
         curdoc().add_periodic_callback(self.update, 5000)
         curdoc().title = "Mimir Weather Station"
+        self.update()
 
     def update(self):
         response = self._weather_grpc_client.get_current_weather()
