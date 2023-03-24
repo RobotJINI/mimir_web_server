@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='mimir',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x19weather_measurement.proto\x12\x05mimir\":\n\x12MeasurementRequest\x12\x12\n\nstart_time\x18\x01 \x01(\x03\x12\x10\n\x08\x65nd_time\x18\x02 \x01(\x03\"\xd1\x01\n\x0bMeasurement\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x61ir_temp\x18\x02 \x01(\t\x12\x10\n\x08pressure\x18\x03 \x01(\t\x12\x10\n\x08humidity\x18\x04 \x01(\t\x12\x13\n\x0bground_temp\x18\x05 \x01(\t\x12\n\n\x02uv\x18\x06 \x01(\t\x12\x12\n\nuv_risk_lv\x18\x07 \x01(\t\x12\x12\n\nwind_speed\x18\x08 \x01(\t\x12\x10\n\x08rainfall\x18\t \x01(\t\x12\x11\n\train_rate\x18\n \x01(\t\x12\x10\n\x08wind_dir\x18\x0b \x01(\t\"?\n\x13MeasurementResponse\x12(\n\x0cmeasurements\x18\x01 \x03(\x0b\x32\x12.mimir.Measurement\"\xef\x01\n\x16\x43urrentWeatherResponse\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x61ir_temp\x18\x02 \x01(\t\x12\x10\n\x08pressure\x18\x03 \x01(\t\x12\x10\n\x08humidity\x18\x04 \x01(\t\x12\x13\n\x0bground_temp\x18\x05 \x01(\t\x12\n\n\x02uv\x18\x06 \x01(\t\x12\x12\n\nuv_risk_lv\x18\x07 \x01(\t\x12\x12\n\nwind_speed\x18\x08 \x01(\t\x12\x11\n\twind_gust\x18\t \x01(\t\x12\x10\n\x08rainfall\x18\n \x01(\t\x12\x11\n\train_rate\x18\x0b \x01(\t\x12\x10\n\x08wind_dir\x18\x0c \x01(\t\")\n\x15\x43urrentWeatherRequest\x12\x10\n\x08\x64uration\x18\x01 \x01(\x03\x32\xb2\x01\n\rWeatherServer\x12K\n\x10get_measurements\x12\x19.mimir.MeasurementRequest\x1a\x1a.mimir.MeasurementResponse\"\x00\x12T\n\x13get_current_weather\x12\x1c.mimir.CurrentWeatherRequest\x1a\x1d.mimir.CurrentWeatherResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x19weather_measurement.proto\x12\x05mimir\":\n\x12MeasurementRequest\x12\x12\n\nstart_time\x18\x01 \x01(\x03\x12\x10\n\x08\x65nd_time\x18\x02 \x01(\x03\"\xd1\x01\n\x0bMeasurement\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x61ir_temp\x18\x02 \x01(\t\x12\x10\n\x08pressure\x18\x03 \x01(\t\x12\x10\n\x08humidity\x18\x04 \x01(\t\x12\x13\n\x0bground_temp\x18\x05 \x01(\t\x12\n\n\x02uv\x18\x06 \x01(\t\x12\x12\n\nuv_risk_lv\x18\x07 \x01(\t\x12\x12\n\nwind_speed\x18\x08 \x01(\t\x12\x10\n\x08rainfall\x18\t \x01(\t\x12\x11\n\train_rate\x18\n \x01(\t\x12\x10\n\x08wind_dir\x18\x0b \x01(\t\"?\n\x13MeasurementResponse\x12(\n\x0cmeasurements\x18\x01 \x03(\x0b\x32\x12.mimir.Measurement2\\\n\rWeatherServer\x12K\n\x10get_measurements\x12\x19.mimir.MeasurementRequest\x1a\x1a.mimir.MeasurementResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -193,151 +193,10 @@ _MEASUREMENTRESPONSE = _descriptor.Descriptor(
   serialized_end=371,
 )
 
-
-_CURRENTWEATHERRESPONSE = _descriptor.Descriptor(
-  name='CurrentWeatherResponse',
-  full_name='mimir.CurrentWeatherResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='time', full_name='mimir.CurrentWeatherResponse.time', index=0,
-      number=1, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='air_temp', full_name='mimir.CurrentWeatherResponse.air_temp', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='pressure', full_name='mimir.CurrentWeatherResponse.pressure', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='humidity', full_name='mimir.CurrentWeatherResponse.humidity', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='ground_temp', full_name='mimir.CurrentWeatherResponse.ground_temp', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uv', full_name='mimir.CurrentWeatherResponse.uv', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uv_risk_lv', full_name='mimir.CurrentWeatherResponse.uv_risk_lv', index=6,
-      number=7, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='wind_speed', full_name='mimir.CurrentWeatherResponse.wind_speed', index=7,
-      number=8, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='wind_gust', full_name='mimir.CurrentWeatherResponse.wind_gust', index=8,
-      number=9, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='rainfall', full_name='mimir.CurrentWeatherResponse.rainfall', index=9,
-      number=10, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='rain_rate', full_name='mimir.CurrentWeatherResponse.rain_rate', index=10,
-      number=11, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='wind_dir', full_name='mimir.CurrentWeatherResponse.wind_dir', index=11,
-      number=12, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=374,
-  serialized_end=613,
-)
-
-
-_CURRENTWEATHERREQUEST = _descriptor.Descriptor(
-  name='CurrentWeatherRequest',
-  full_name='mimir.CurrentWeatherRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='duration', full_name='mimir.CurrentWeatherRequest.duration', index=0,
-      number=1, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=615,
-  serialized_end=656,
-)
-
 _MEASUREMENTRESPONSE.fields_by_name['measurements'].message_type = _MEASUREMENT
 DESCRIPTOR.message_types_by_name['MeasurementRequest'] = _MEASUREMENTREQUEST
 DESCRIPTOR.message_types_by_name['Measurement'] = _MEASUREMENT
 DESCRIPTOR.message_types_by_name['MeasurementResponse'] = _MEASUREMENTRESPONSE
-DESCRIPTOR.message_types_by_name['CurrentWeatherResponse'] = _CURRENTWEATHERRESPONSE
-DESCRIPTOR.message_types_by_name['CurrentWeatherRequest'] = _CURRENTWEATHERREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 MeasurementRequest = _reflection.GeneratedProtocolMessageType('MeasurementRequest', (_message.Message,), {
@@ -361,20 +220,6 @@ MeasurementResponse = _reflection.GeneratedProtocolMessageType('MeasurementRespo
   })
 _sym_db.RegisterMessage(MeasurementResponse)
 
-CurrentWeatherResponse = _reflection.GeneratedProtocolMessageType('CurrentWeatherResponse', (_message.Message,), {
-  'DESCRIPTOR' : _CURRENTWEATHERRESPONSE,
-  '__module__' : 'weather_measurement_pb2'
-  # @@protoc_insertion_point(class_scope:mimir.CurrentWeatherResponse)
-  })
-_sym_db.RegisterMessage(CurrentWeatherResponse)
-
-CurrentWeatherRequest = _reflection.GeneratedProtocolMessageType('CurrentWeatherRequest', (_message.Message,), {
-  'DESCRIPTOR' : _CURRENTWEATHERREQUEST,
-  '__module__' : 'weather_measurement_pb2'
-  # @@protoc_insertion_point(class_scope:mimir.CurrentWeatherRequest)
-  })
-_sym_db.RegisterMessage(CurrentWeatherRequest)
-
 
 
 _WEATHERSERVER = _descriptor.ServiceDescriptor(
@@ -383,8 +228,8 @@ _WEATHERSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=659,
-  serialized_end=837,
+  serialized_start=373,
+  serialized_end=465,
   methods=[
   _descriptor.MethodDescriptor(
     name='get_measurements',
@@ -393,15 +238,6 @@ _WEATHERSERVER = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_MEASUREMENTREQUEST,
     output_type=_MEASUREMENTRESPONSE,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='get_current_weather',
-    full_name='mimir.WeatherServer.get_current_weather',
-    index=1,
-    containing_service=None,
-    input_type=_CURRENTWEATHERREQUEST,
-    output_type=_CURRENTWEATHERRESPONSE,
     serialized_options=None,
   ),
 ])

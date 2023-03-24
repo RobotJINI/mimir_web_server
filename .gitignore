@@ -131,4 +131,10 @@ dmypy.json
 #eclipse
 .project
 .pydevproject
-.settings
+
+#credentials
+config/credentials.mysql
+mimir
+.settings/*
+
+
