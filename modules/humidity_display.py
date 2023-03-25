@@ -19,8 +19,8 @@ class HumidityDisplay():
         self._humidity_display.line(y='humidity', x='time', source=self._source)
         return self._humidity_display
 
-    def update_plot(self, dataframe):
+    def update_plot(self, cds):
         if self._humidity_display is not None:
-            self._source.data.update(dataframe.data)
+            self._source.data.update(cds.data)
         else:
             print("Error temp display module not initialized.")

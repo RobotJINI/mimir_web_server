@@ -1,5 +1,8 @@
 import concurrent
 import time
+import threading
+import logging
+from utils.utils import get_time_ms
 
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
@@ -11,13 +14,24 @@ from modules.humidity_display import HumidityDisplay
 from modules.pressure_display import PressureDisplay
 from modules.uv_display import UvDisplay
 from modules.wind_speed_display import WindSpeedDisplay
-from grpclient.client import WeatherGrpcClient
+from model.server_db import WeatherDatabase, WeatherDatabaseSync
 
 
 class MimirWebServer:
     def __init__(self):
-        self._weather_grpc_client = WeatherGrpcClient(ip='192.168.10.102')
+        self._weather_db = WeatherDatabase()
+        self._db_sync = WeatherDatabaseSync()
+        self._db_sync_thread = None
 
+        self._start_db_sync()
+        self._build_ui()
+        self.update()
+        
+    def _start_db_sync(self):
+        self._db_sync_thread = threading.Thread(target=self._db_sync.run)
+        self._db_sync_thread.start()
+        
+    def _build_ui(self):
         self._current_weather_module = CurrentWeather()
         self._current_weather_block = self._current_weather_module.make_plot('Updating....')
 
@@ -46,19 +60,25 @@ class MimirWebServer:
 
         curdoc().add_periodic_callback(self.update, 5000)
         curdoc().title = "Mimir Weather Station"
-        self.update()
+        
+    def __del__(self):
+        if self._db_sync_thread and self._db_sync_thread.is_alive():
+            self._db_sync.stop()
+            self._db_sync_thread.join()
+        
 
     def update(self):
-        response = self._weather_grpc_client.get_current_weather()
-        measurement_df = self._weather_grpc_client.get_measurements()
+        cur_weather_resp = self._weather_db.get_current_weather()       
+        measurement_df = self._weather_db.get_historical_weather()
 
-        self._current_weather_module.update_plot(response)
+        self._current_weather_module.update_plot(cur_weather_resp)
         self._temperature_display_module.update_plot(measurement_df)
         self._pressure_display_module.update_plot(measurement_df)
         self._humidity_display_module.update_plot(measurement_df)
         self._uv_display_module.update_plot(measurement_df)
         self._wind_speed_display_module.update_plot(measurement_df)
-        print(f'response:{response}')
+        logging.debug(f'response:{cur_weather_resp}')
 
 
+logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 mimir_web_server = MimirWebServer()

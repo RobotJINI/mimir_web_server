@@ -21,8 +21,8 @@ class TemperatureDisplay():
         self._temp_display.line(y='ground_temp', x='time', source=self._source)
         return self._temp_display
 
-    def update_plot(self, dataframe):
+    def update_plot(self, cds):
         if self._temp_display is not None:
-            self._source.data.update(dataframe.data)
+            self._source.data.update(cds.data)
         else:
             print("Error temp display module not initialized.")

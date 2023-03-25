@@ -19,8 +19,8 @@ class UvDisplay():
         self._uv_display.line(y='uv', x='time', source=self._source)
         return self._uv_display
 
-    def update_plot(self, dataframe):
+    def update_plot(self, cds):
         if self._uv_display is not None:
-            self._source.data.update(dataframe.data)
+            self._source.data.update(cds.data)
         else:
             print("Error temp display module not initialized.")

@@ -4,7 +4,9 @@ import time
 import math
 import logging
 import threading
+from utils.utils import get_time_ms
 from grpclient.weather_grpc_client import WeatherGrpcClient
+from bokeh.models import ColumnDataSource
 
 
 class MysqlDatabase:
@@ -44,8 +46,32 @@ class WeatherDatabase:
                                 'rain_rate, wind_dir) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'
                                 
         self._latest_time_template = 'SELECT * FROM weather_measurement ORDER BY time DESC LIMIT 1;'
+        
+        self._historical_weather_count_template = 'SELECT COUNT(*) ' + \
+                                                  'FROM weather_measurement ' + \
+                                                  'WHERE time BETWEEN %s AND %s;'
+                                                  
+        self._historical_weather_template = 'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, rainfall, rain_rate, wind_dir ' + \
+                                            'FROM (' + \
+                                            'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, rainfall, rain_rate, wind_dir, ROW_NUMBER() OVER () AS row_num ' + \
+                                            'FROM weather_measurement ' + \
+                                            'WHERE time BETWEEN %s AND %s' + \
+                                            ') subquery ' + \
+                                            'WHERE MOD(row_num, %s) = 0;'
 
-                                          
+        self._current_weather_template = 'SELECT AVG(air_temp) as air_temp, AVG(pressure) as pressure, AVG(humidity) as humidity, ' + \
+                                         'AVG(ground_temp) as ground_temp, AVG(uv) as uv, AVG(wind_speed) as wind_speed, MAX(wind_speed) as gust, ' + \
+                                         'AVG(rainfall) as rainfall, AVG(rain_rate) as rain_rate ' + \
+                                         'FROM weather_measurement ' + \
+                                         'WHERE time BETWEEN %s AND %s;'
+
+        self._latest_uv_template = 'SELECT uv_risk_lv FROM weather_measurement LIMIT 1;'
+
+        self._current_wind_dir_template = 'SELECT wind_dir ' + \
+                                          'FROM weather_measurement ' + \
+                                          'WHERE time BETWEEN %s AND %s AND NOT wind_dir=-1;'
+        
+        self._approx_max_returns = 2000                                          
         credentials_file = os.path.join(os.path.dirname(__file__), "../config/credentials.mysql")                                  
         self._credentials = self._load_credentials(credentials_file)
         self._db = MysqlDatabase(self._credentials)
@@ -68,6 +94,84 @@ class WeatherDatabase:
         params = (time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, rainfall, rain_rate, wind_dir)
         logging.debug(self._insert_template % params)
         self._db.execute(self._insert_template, params)
+        
+    def get_historical_weather(self, start_time=None, end_time=None):
+        if end_time is None:
+            end_time = get_time_ms()
+        if start_time is None:
+            start_time = end_time - 8640000 # 1 day ms
+            
+        count = self._get_historical_weather_count(start_time, end_time)
+        modulus = int(count / self._approx_max_returns) + 1
+        logging.debug(f'count, modulus: {count}, {modulus}')
+        params = (start_time, end_time, modulus)
+        query_response = self._db.query(self._historical_weather_template % params)
+        return self._query_to_cds(query_response)
+
+    def get_current_weather(self, duration=120):
+        end_time = get_time_ms()
+        start_time = end_time - (duration * 1000)
+        params = (start_time, end_time)
+        return self._db.query(self._current_weather_template % params)
+
+    def get_latest_uv_risk(self):
+        query_response = self._db.query(self._latest_uv_template)
+        logging.debug(f'get_latest_uv_risk: {query_response}')
+        return query_response[0]['uv_risk_lv']
+
+    def get_average_wind_dir(self, start_time, end_time):
+        params = (start_time, end_time)
+        query_response = self._db.query(self._current_wind_dir_template % params)
+        return self._average_wind_dir(query_response)
+    
+    def _get_historical_weather_count(self, start_time, end_time):
+        params = (start_time, end_time)
+        return (self._db.query(self._historical_weather_count_template % params))[0]['COUNT(*)']
+    
+    def _query_to_cds(self, query_response):
+        measurement_dict = {
+            'time': [int(db_measurement['time']) for db_measurement in query_response],
+            'air_temp': [float(db_measurement['air_temp']) for db_measurement in query_response],
+            'pressure': [float(db_measurement['pressure']) for db_measurement in query_response],
+            'humidity': [float(db_measurement['humidity']) for db_measurement in query_response],
+            'ground_temp': [float(db_measurement['ground_temp']) for db_measurement in query_response],
+            'uv': [float(db_measurement['uv']) for db_measurement in query_response],
+            'uv_risk_lv': [str(db_measurement['uv_risk_lv']) for db_measurement in query_response],
+            'wind_speed': [float(db_measurement['wind_speed']) for db_measurement in query_response],
+            'rainfall': [float(db_measurement['rainfall']) for db_measurement in query_response],
+            'rain_rate': [float(db_measurement['rain_rate']) for db_measurement in query_response],
+            'wind_dir': [float(db_measurement['wind_dir']) for db_measurement in query_response]
+        }
+    
+        return ColumnDataSource(data=measurement_dict)
+    
+    def _average_wind_dir(self, query_response):
+        sin_sum = 0.0
+        cos_sum = 0.0
+
+        flen = float(len(query_response))
+        if flen == 0:
+            return -1
+
+        for angle_response in query_response:
+            angle = angle_response['wind_dir']
+            r = math.radians(angle)
+            sin_sum += math.sin(r)
+            cos_sum += math.cos(r)
+
+        s = sin_sum / flen
+        c = cos_sum / flen
+        arc = math.degrees(math.atan(s / c))
+        average = 0.0
+
+        if s > 0 and c > 0:
+            average = arc
+        elif c < 0:
+            average = arc + 180
+        elif s < 0 and c > 0:
+            average = arc + 360
+
+        return 0.0 if average == 360 else average
     
     def get_last_entry_time(self):
         return self._db.query(self._latest_time_template)[0]['time'] + 1
@@ -84,7 +188,7 @@ class WeatherDatabaseSync:
     def run(self):
         self._running = True
         while(self._running):
-            time_ms = self._get_time_ms()
+            time_ms = get_time_ms()
             if self._last_updated_time is None or (time_ms - self._last_updated_time) >= self._interval:
                 self._update()
                 self._last_updated_time = time_ms
@@ -97,29 +201,11 @@ class WeatherDatabaseSync:
         
     def _update(self):
         start_time = self._weather_db.get_last_entry_time()
-        end_time = self._get_time_ms()
+        end_time = get_time_ms()
         logging.debug(f'self._weather_grpc_client.get_measurements(start_time={start_time}, end_time={end_time})')
-        measurement_pb = self._weather_grpc_client.get_measurements(start_time=start_time, end_time=end_time)
+        measurement_pb = self._weather_grpc_client.get_measurements(start_time, end_time)
         
         for measurement in measurement_pb.measurements:
             self._weather_db.insert(measurement.time, measurement.air_temp, measurement.pressure, measurement.humidity, measurement.ground_temp, measurement.uv,
                                     measurement.uv_risk_lv, measurement.wind_speed, measurement.rainfall, measurement.rain_rate, measurement.wind_dir)
-        
-    def _get_time_ms(self):
-        return int(time.time() * 1000)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     

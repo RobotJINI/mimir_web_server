@@ -19,8 +19,8 @@ class WindSpeedDisplay():
         self._wind_speed_display.line(y='wind_speed', x='time', source=self._source)
         return self._wind_speed_display
 
-    def update_plot(self, dataframe):
+    def update_plot(self, cds):
         if self._wind_speed_display is not None:
-            self._source.data.update(dataframe.data)
+            self._source.data.update(cds.data)
         else:
             print("Error temp display module not initialized.")
