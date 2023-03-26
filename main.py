@@ -7,6 +7,7 @@ from utils.utils import get_time_ms
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
 from bokeh.models import Select, Paragraph
+from bokeh.util.logconfig import basicConfig
 
 from modules.current_weather import CurrentWeather
 from modules.temperature_display import TemperatureDisplay
@@ -14,7 +15,9 @@ from modules.humidity_display import HumidityDisplay
 from modules.pressure_display import PressureDisplay
 from modules.uv_display import UvDisplay
 from modules.wind_speed_display import WindSpeedDisplay
-from model.server_db import WeatherDatabase, WeatherDatabaseSync
+from model.weather_database_sync import WeatherDatabaseSync
+from model.weather_database import WeatherDatabase
+from filters.historical_weather_filter import HistoricalWeatherFilter
 
 
 class MimirWebServer:
@@ -25,6 +28,7 @@ class MimirWebServer:
 
         self._start_db_sync()
         self._build_ui()
+        self._hwf = HistoricalWeatherFilter()
         self.update()
         
     def _start_db_sync(self):
@@ -69,16 +73,18 @@ class MimirWebServer:
 
     def update(self):
         cur_weather_resp = self._weather_db.get_current_weather()       
-        measurement_df = self._weather_db.get_historical_weather()
+        hw_cds = self._weather_db.get_historical_weather()
+        hw_cds = self._hwf.process(hw_cds)
 
         self._current_weather_module.update_plot(cur_weather_resp)
-        self._temperature_display_module.update_plot(measurement_df)
-        self._pressure_display_module.update_plot(measurement_df)
-        self._humidity_display_module.update_plot(measurement_df)
-        self._uv_display_module.update_plot(measurement_df)
-        self._wind_speed_display_module.update_plot(measurement_df)
+        self._temperature_display_module.update_plot(hw_cds)
+        self._pressure_display_module.update_plot(hw_cds)
+        self._humidity_display_module.update_plot(hw_cds)
+        self._uv_display_module.update_plot(hw_cds)
+        self._wind_speed_display_module.update_plot(hw_cds)
         logging.debug(f'response:{cur_weather_resp}')
 
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+basicConfig()
 mimir_web_server = MimirWebServer()

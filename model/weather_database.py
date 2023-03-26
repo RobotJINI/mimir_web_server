@@ -5,8 +5,9 @@ import math
 import logging
 import threading
 from utils.utils import get_time_ms
-from grpclient.weather_grpc_client import WeatherGrpcClient
 from bokeh.models import ColumnDataSource
+import numpy as np
+import pandas as pd
 
 
 class MysqlDatabase:
@@ -99,7 +100,7 @@ class WeatherDatabase:
         if end_time is None:
             end_time = get_time_ms()
         if start_time is None:
-            start_time = end_time - 8640000 # 1 day ms
+            start_time = end_time - 86400000 # 1 day ms
             
         count = self._get_historical_weather_count(start_time, end_time)
         modulus = int(count / self._approx_max_returns) + 1
@@ -142,7 +143,6 @@ class WeatherDatabase:
             'rain_rate': [float(db_measurement['rain_rate']) for db_measurement in query_response],
             'wind_dir': [float(db_measurement['wind_dir']) for db_measurement in query_response]
         }
-    
         return ColumnDataSource(data=measurement_dict)
     
     def _average_wind_dir(self, query_response):
@@ -175,37 +175,4 @@ class WeatherDatabase:
     
     def get_last_entry_time(self):
         return self._db.query(self._latest_time_template)[0]['time'] + 1
-    
-    
-class WeatherDatabaseSync:
-    def __init__(self):
-        self._weather_grpc_client = WeatherGrpcClient(hostname='mimir.local')
-        self._weather_db = WeatherDatabase()
-        self._running = False
-        self._interval = 10000
-        self._last_updated_time = None
-        
-    def run(self):
-        self._running = True
-        while(self._running):
-            time_ms = get_time_ms()
-            if self._last_updated_time is None or (time_ms - self._last_updated_time) >= self._interval:
-                self._update()
-                self._last_updated_time = time_ms
-
-            time.sleep(.1)
-            
-        
-    def stop(self):
-        self._running = False
-        
-    def _update(self):
-        start_time = self._weather_db.get_last_entry_time()
-        end_time = get_time_ms()
-        logging.debug(f'self._weather_grpc_client.get_measurements(start_time={start_time}, end_time={end_time})')
-        measurement_pb = self._weather_grpc_client.get_measurements(start_time, end_time)
-        
-        for measurement in measurement_pb.measurements:
-            self._weather_db.insert(measurement.time, measurement.air_temp, measurement.pressure, measurement.humidity, measurement.ground_temp, measurement.uv,
-                                    measurement.uv_risk_lv, measurement.wind_speed, measurement.rainfall, measurement.rain_rate, measurement.wind_dir)
     
