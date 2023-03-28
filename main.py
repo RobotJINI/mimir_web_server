@@ -18,6 +18,8 @@ from modules.wind_speed_display import WindSpeedDisplay
 from model.weather_database_sync import WeatherDatabaseSync
 from model.weather_database import WeatherDatabase
 from filters.historical_weather_filter import HistoricalWeatherFilter
+from bokeh.themes import Theme
+import model.theme
 
 
 class MimirWebServer:
@@ -25,6 +27,7 @@ class MimirWebServer:
         self._weather_db = WeatherDatabase()
         self._db_sync = WeatherDatabaseSync()
         self._db_sync_thread = None
+        self._theme = model.theme.DefaultTheme()
 
         self._start_db_sync()
         self._build_ui()
@@ -64,6 +67,24 @@ class MimirWebServer:
 
         curdoc().add_periodic_callback(self.update, 5000)
         curdoc().title = "Mimir Weather Station"
+        
+        #self._add_custom_theme()
+        
+        
+    def _add_custom_theme(self):
+        # define a custom theme with a light blue background
+        custom_theme = Theme(
+            json={
+                'attrs': {
+                    'Figure': {
+                        'background_fill_color': self._theme.get_background_fill()
+                    }
+                }
+            }
+        )
+        
+        # apply the custom theme to the current document
+        curdoc().theme = custom_theme
         
     def __del__(self):
         if self._db_sync_thread and self._db_sync_thread.is_alive():
