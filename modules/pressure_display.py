@@ -8,7 +8,7 @@ from bokeh.models import Range1d
 class PressureDisplay():
     def __init__(self):
         super().__init__()
-        self._pressure_display = figure()
+        self._pressure_display = figure(x_axis_type="datetime")
         #self._temp_display.y_range = Range1d(0, 40)
 
     def make_plot(self):

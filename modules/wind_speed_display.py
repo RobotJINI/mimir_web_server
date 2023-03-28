@@ -8,7 +8,7 @@ from bokeh.models import Range1d
 class WindSpeedDisplay():
     def __init__(self):
         super().__init__()
-        self._wind_speed_display = figure()
+        self._wind_speed_display = figure(x_axis_type="datetime")
         #self._temp_display.y_range = Range1d(0, 40)
 
     def make_plot(self):

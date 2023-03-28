@@ -8,7 +8,7 @@ from bokeh.models import Range1d
 class HumidityDisplay():
     def __init__(self):
         super().__init__()
-        self._humidity_display = figure()
+        self._humidity_display = figure(x_axis_type="datetime")
         #self._temp_display.y_range = Range1d(0, 40)
 
     def make_plot(self):

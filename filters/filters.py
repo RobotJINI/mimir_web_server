@@ -23,6 +23,20 @@ class ToListFilter(Filter):
     def process(self, data):
         return super().process(data.to_list())
     
+#expects time list in ms
+class ToEstFilter(Filter):
+    def __init__(self):
+        super().__init__()
+        self._est_time_diff_msec = 3600000 * 5 #5 hours in milli seconds
+        
+    def process(self, data):
+        data[:] = [self._to_est_seconds(time_ms) for time_ms in data]
+        return super().process(data)
+    
+    def _to_est_seconds(self, time_ms):
+        return time_ms - self._est_time_diff_msec
+    
+    
 class OutliersFilter(Filter):
     def __init__(self, window_size=5, max_z_score=3):
         self._window_size = window_size
@@ -39,13 +53,3 @@ class OutliersFilter(Filter):
         # Replace outliers with local average
         data[outliers] = local_avg[outliers]
         return super().process(data)
-    
-    
-class CoreWeatherFilterChain:
-    def __init__(self):
-        self.filter_chain = ToPdSeriesFilter()
-        self.filter_chain.set_next(OutliersFilter())
-        self.filter_chain.set_next(ToListFilter())
-
-    def process(self, data):
-        return self.filter_chain.process(request)
