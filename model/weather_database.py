@@ -98,17 +98,20 @@ class WeatherDatabase:
         logging.debug(self._insert_template % params)
         self._db.execute(self._insert_template, params)
         
-    def get_historical_weather(self, start_time=None, end_time=None):
+    def get_historical_weather(self, start_time=None, end_time=None, sub_sample=True):
         if end_time is None:
             end_time = get_time_ms()
         if start_time is None:
             start_time = end_time - 86400000 # 1 day ms
             
         count = self._get_historical_weather_count(start_time, end_time)
-        modulus = int(count / self._approx_max_returns) + 1
-        logging.debug(f'count, modulus: {count}, {modulus}')
+        modulus = 1
+        if sub_sample:
+            modulus = int(count / self._approx_max_returns) + 1
+            
         params = (start_time, end_time, modulus)
         query_response = self._db.query(self._historical_weather_template % params)
+        
         return self._query_to_cds(query_response)
 
     def get_current_weather(self, duration=120):
@@ -137,11 +140,11 @@ class WeatherDatabase:
         return upper_bounds, lower_bounds          
         
     def _get_upper_bounds(self, field_name):
-        params = (field_name, field_name, 'ASC')
+        params = (field_name, field_name, 'DESC')
         return self._db.query(self._select_bounds_template % params)
         
     def _get_lower_bounds(self, field_name):
-        params = (field_name, field_name, 'DESC')
+        params = (field_name, field_name, 'ASC')
         return self._db.query(self._select_bounds_template % params)
 
     def _get_historical_weather_count(self, start_time, end_time):

@@ -96,7 +96,7 @@ class MimirWebServer:
 
     def update(self):
         cur_weather_resp = self._weather_db.get_current_weather()       
-        hw_cds = self._weather_db.get_historical_weather()
+        hw_cds = self._weather_db.get_historical_weather(sub_sample=True)
         hw_cds = self._hwf.process(hw_cds)
 
         self._current_weather_module.update_plot(cur_weather_resp)

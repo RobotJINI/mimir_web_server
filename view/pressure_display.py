@@ -8,7 +8,7 @@ from bokeh.models import DataRange1d
 
 class PressureDisplay():
     def __init__(self):
-        super().__init__()
+        self._offset = 10
         self._pressure_display = figure(x_axis_type="datetime")
 
     def make_plot(self):
@@ -21,8 +21,9 @@ class PressureDisplay():
         self._pressure_display.x_range = DataRange1d(range_padding=0.0)
         
         # Add dotted lines for upper and lower bounds
-        self._pressure_display.add_layout(Span(location=6, dimension='width', line_color='green', line_dash='dashed'))
-        self._pressure_display.add_layout(Span(location=1, dimension='width', line_color='red', line_dash='dashed'))
+        self._pressure_display.renderers.append(Span(location=6, dimension='width', line_color='green', line_dash='dashed'))
+        self._pressure_display.renderers.append(Span(location=1, dimension='width', line_color='red', line_dash='dashed'))
+        self._pressure_display.renderers.append(Span(location=3.5, dimension='width', line_color='blue', line_dash='dashed'))
         
         self._pressure_display.title.text = 'Pressure (mbar)'
         self._pressure_display.title.align = 'center'
@@ -34,8 +35,15 @@ class PressureDisplay():
             self._source.data.update(cds.data)
             
             # Update locations of dotted lines for upper and lower bounds
-            print(len(self._pressure_display.renderers))
-            #self._pressure_display.renderers[-2].location = upper_bound
-            #self._pressure_display.renderers[-1].location = lower_bound
+            print(f'len: {len(self._pressure_display.renderers)}, upper_bound: {upper_bound}, lower_bound: {lower_bound}')
+            self._pressure_display.renderers[-3].location = upper_bound
+            self._pressure_display.renderers[-2].location = lower_bound
+            self._pressure_display.renderers[-1].location = (lower_bound + upper_bound) / 2
+            
+            # Update y-axis range
+            new_y_range = Range1d(start=lower_bound - self._offset, 
+                                  end=upper_bound + self._offset)
+            self._pressure_display.y_range = new_y_range
+            self._pressure_display.y_range.update()
         else:
             print("Error temp display module not initialized.")

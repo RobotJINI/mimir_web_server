@@ -1,15 +1,13 @@
-from bokeh.models import ColumnDataSource, Range1d
+from bokeh.models import ColumnDataSource, Range1d, DataRange1d, Legend, Label, DatetimeTickFormatter
 from bokeh.models.widgets import DataTable, TableColumn, NumberFormatter, Paragraph
-from bokeh.models import DatetimeTickFormatter
 from bokeh.layouts import column
 from bokeh.plotting import figure
-from bokeh.models import DataRange1d, Legend, Label
 from model.theme import DefaultTheme
 
 
 class TemperatureDisplay():
     def __init__(self):
-        self._offset = 5
+        self._offset = 10
         self._degree_char = '\u00b0'
         self._temp_display = figure(x_axis_type="datetime")
 
