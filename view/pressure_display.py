@@ -34,7 +34,6 @@ class PressureDisplay():
             self._source.data.update(cds.data)
             
             # Update locations of dotted lines for upper and lower bounds
-            print(f'len: {len(self._pressure_display.renderers)}, upper_bound: {upper_bound}, lower_bound: {lower_bound}')
             self._pressure_display.renderers[-3].location = upper_bound
             self._pressure_display.renderers[-2].location = lower_bound
             self._pressure_display.renderers[-1].location = (lower_bound + upper_bound) / 2
