@@ -71,6 +71,8 @@ class WeatherDatabase:
         self._current_wind_dir_template = 'SELECT wind_dir ' + \
                                           'FROM weather_measurement ' + \
                                           'WHERE time BETWEEN %s AND %s AND NOT wind_dir=-1;'
+                                          
+        self._select_bounds_template = 'SELECT %s FROM weather_measurement ORDER BY %s %s LIMIT 100;'
         
         self._approx_max_returns = 2000                                          
         credentials_file = os.path.join(os.path.dirname(__file__), "../config/credentials.mysql")                                  
@@ -125,6 +127,23 @@ class WeatherDatabase:
         query_response = self._db.query(self._current_wind_dir_template % params)
         return self._average_wind_dir(query_response)
     
+    def get_upper_lower_bounds(self, field_name='pressure'):
+        upper_bounds_resp = self._get_upper_bounds(field_name)
+        lower_bounds_resp = self._get_lower_bounds(field_name)
+        
+        upper_bounds = [int(item[field_name]) for item in upper_bounds_resp]
+        lower_bounds = [int(item[field_name]) for item in lower_bounds_resp]
+        
+        return upper_bounds, lower_bounds          
+        
+    def _get_upper_bounds(self, field_name):
+        params = (field_name, field_name, 'ASC')
+        return self._db.query(self._select_bounds_template % params)
+        
+    def _get_lower_bounds(self, field_name):
+        params = (field_name, field_name, 'DESC')
+        return self._db.query(self._select_bounds_template % params)
+
     def _get_historical_weather_count(self, start_time, end_time):
         params = (start_time, end_time)
         return (self._db.query(self._historical_weather_count_template % params))[0]['COUNT(*)']

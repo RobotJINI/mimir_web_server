@@ -9,15 +9,16 @@ from bokeh.layouts import column, row
 from bokeh.models import Select, Paragraph
 from bokeh.util.logconfig import basicConfig
 
-from modules.current_weather import CurrentWeather
-from modules.temperature_display import TemperatureDisplay
-from modules.humidity_display import HumidityDisplay
-from modules.pressure_display import PressureDisplay
-from modules.uv_display import UvDisplay
-from modules.wind_speed_display import WindSpeedDisplay
+from view.current_weather import CurrentWeather
+from view.temperature_display import TemperatureDisplay
+from view.humidity_display import HumidityDisplay
+from view.pressure_display import PressureDisplay
+from view.uv_display import UvDisplay
+from view.wind_speed_display import WindSpeedDisplay
 from model.weather_database_sync import WeatherDatabaseSync
 from model.weather_database import WeatherDatabase
 from filters.historical_weather_filter import HistoricalWeatherFilter
+from filters.upper_lower_bounds_filter import UpperLowerBoundsFilter
 from bokeh.themes import Theme
 import model.theme
 
@@ -32,6 +33,7 @@ class MimirWebServer:
         self._start_db_sync()
         self._build_ui()
         self._hwf = HistoricalWeatherFilter()
+        self._ulbf = UpperLowerBoundsFilter()
         self.update()
         
     def _start_db_sync(self):
@@ -99,11 +101,18 @@ class MimirWebServer:
 
         self._current_weather_module.update_plot(cur_weather_resp)
         self._temperature_display_module.update_plot(hw_cds)
-        self._pressure_display_module.update_plot(hw_cds)
+        
+        self._update_pressure_display(hw_cds)
+        
         self._humidity_display_module.update_plot(hw_cds)
         self._uv_display_module.update_plot(hw_cds)
         self._wind_speed_display_module.update_plot(hw_cds)
         logging.debug(f'response:{cur_weather_resp}')
+        
+    def _update_pressure_display(self, hw_cds):
+        upper_bounds, lower_bounds = self._weather_db.get_upper_lower_bounds()
+        upper_bound, lower_bound = self._ulbf.process(upper_bounds, lower_bounds)
+        self._pressure_display_module.update_plot(hw_cds, upper_bound, lower_bound)
 
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)

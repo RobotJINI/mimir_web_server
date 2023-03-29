@@ -30,3 +30,4 @@ class HistoricalWeatherFilter():
         cds_dataframe.data['humidity'] = self._cwfc.process(cds_dataframe.data['humidity'])
         cds_dataframe.data['ground_temp'] = self._cwfc.process(cds_dataframe.data['ground_temp'])
         return cds_dataframe
+    

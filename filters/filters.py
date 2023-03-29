@@ -53,3 +53,7 @@ class OutliersFilter(Filter):
         # Replace outliers with local average
         data[outliers] = local_avg[outliers]
         return super().process(data)
+    
+class MeanFilter(Filter):
+    def process(self, data):
+        return super().process(np.mean(data))

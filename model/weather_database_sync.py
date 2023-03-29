@@ -1,7 +1,7 @@
 import time
 import logging
 from model.weather_database import WeatherDatabase
-from grpclient.weather_grpc_client import WeatherGrpcClient
+from model.weather_grpc_client import WeatherGrpcClient
 from utils.utils import get_time_ms
 
 class WeatherDatabaseSync:

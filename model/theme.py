@@ -13,5 +13,8 @@ class DefaultTheme():
     def get_ground(self):
         return self._color1 
     
+    def get_default_line(self):
+        return self._color2
+    
     def get_background_fill(self):
         return self._color4
