@@ -1,4 +1,4 @@
-from filters.filters import ToPdSeriesFilter, OutliersFilter, MeanFilter
+from controller.filters.filters import ToPdSeriesFilter, OutliersFilter, MeanFilter
 
 
 class MeanBoundsFilterChain:

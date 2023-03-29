@@ -1,5 +1,4 @@
-from filters.filters import ToPdSeriesFilter, OutliersFilter, ToListFilter
-from filters.filters import ToEstFilter
+from controller.filters.filters import ToPdSeriesFilter, OutliersFilter, ToListFilter, ToEstFilter
 
 class CoreWeatherFilterChain:
     def __init__(self):
