@@ -29,7 +29,7 @@ class PressureDisplay():
         self._pressure_display.title.text_font_size = '20pt'
         return self._pressure_display
 
-    def update_plot(self, cds, upper_bound, lower_bound):
+    def update_plot(self, cds, lower_bound, upper_bound):
         if self._pressure_display is not None:
             self._source.data.update(cds.data)
             

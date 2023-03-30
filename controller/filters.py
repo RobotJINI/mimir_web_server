@@ -18,6 +18,7 @@ class CoreWeatherFilter:
         
         # Replace outliers with local average
         data[outliers] = local_avg[outliers]
+        return data
     
 class TimeFilter:
     def __init__(self):
@@ -29,22 +30,3 @@ class TimeFilter:
     
     def _to_est_seconds(self, time_ms):
         return time_ms - self._est_time_diff_msec
-    
-
-class UpperLowerBoundsFilter():   
-    def process(self, upper_bounds, lower_bounds):
-        return(np.mean(upper_bounds), np.mean(lower_bounds))
-    
-class HistoricalWeatherFilter():
-    def __init__(self):
-        self._cwf = CoreWeatherFilter()
-        self._tf = TimeFilter()
-        
-    def process(self, cds_dataframe):
-        cds_dataframe.data['time'] = self._tf.process(cds_dataframe.data['time'])
-        
-        cds_dataframe.data['air_temp'] = self._cwf.process(cds_dataframe.data['air_temp'])
-        cds_dataframe.data['pressure'] = self._cwf.process(cds_dataframe.data['pressure'])
-        cds_dataframe.data['humidity'] = self._cwf.process(cds_dataframe.data['humidity'])
-        cds_dataframe.data['ground_temp'] = self._cwf.process(cds_dataframe.data['ground_temp'])
-        return cds_dataframe

@@ -13,7 +13,7 @@ from view.humidity_display import HumidityDisplay
 from view.pressure_display import PressureDisplay
 from view.uv_display import UvDisplay
 from view.wind_speed_display import WindSpeedDisplay
-from controller.display_controller import DisplayController
+from controller.controllers import DisplayController
 from bokeh.themes import Theme
 import model.theme
 
