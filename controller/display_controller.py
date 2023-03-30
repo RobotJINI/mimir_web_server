@@ -1,6 +1,5 @@
 import threading
-from controller.filters.historical_weather_filter import HistoricalWeatherFilter
-from controller.filters.upper_lower_bounds_filter import UpperLowerBoundsFilter
+from controller.filters import HistoricalWeatherFilter, UpperLowerBoundsFilter
 from model.weather_database import WeatherDatabase
 from model.weather_database_sync import WeatherDatabaseSync
 
@@ -23,7 +22,7 @@ class DisplayController:
         
     def update(self):
         cur_weather_resp = self._weather_db.get_current_weather()       
-        hw_cds = self._weather_db.get_historical_weather(sub_sample=True)
+        hw_cds = self._weather_db.get_historical_weather(sub_sample=False)
         hw_cds = self._hwf.process(hw_cds)
 
         self._current_weather.update_plot(cur_weather_resp)
