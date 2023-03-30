@@ -102,7 +102,7 @@ class WeatherDatabase:
         if end_time is None:
             end_time = get_time_ms()
         if start_time is None:
-            start_time = end_time - 86400000 # 1 day ms
+            start_time = end_time - 86400000 * 5# 1 day ms
             
         count = self._get_historical_weather_count(start_time, end_time)
         modulus = 1

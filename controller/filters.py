@@ -1,24 +1,15 @@
 import pandas as pd
 import numpy as np
+from scipy.signal import savgol_filter
+
 
 class CoreWeatherFilter:
-    def __init__(self, window_size=5, max_z_score=3):
+    def __init__(self, window_size=400, polynomial=2):
         self._window_size = window_size
-        self._max_z_score = max_z_score
+        self._polynomial = polynomial
 
     def process(self, data):
-        return self._outlier_filter(pd.Series(data)).to_list()
-    
-    def _outlier_filter(self, data):
-        # Identify outliers
-        z_scores = np.abs((data - np.mean(data)) / np.std(data))
-        outliers = z_scores > self._max_z_score
-        
-        local_avg = data.rolling(window=self._window_size, min_periods=1, center=True).mean()
-        
-        # Replace outliers with local average
-        data[outliers] = local_avg[outliers]
-        return data
+        return savgol_filter(data, self._window_size, self._polynomial)
     
 class TimeFilter:
     def __init__(self):

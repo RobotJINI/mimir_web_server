@@ -39,8 +39,8 @@ class TemperatureDisplay():
             self._source.data.update(cds.data)            
                         
             # Update y-axis range
-            new_y_range = Range1d(start=min(self._source.data['air_temp'] + self._source.data['ground_temp']) - self._offset, 
-                                  end=max(self._source.data['air_temp'] + self._source.data['ground_temp']) + self._offset)
+            new_y_range = Range1d(start=min(self._source.data['air_temp']) - self._offset, 
+                                  end=max(self._source.data['air_temp']) + self._offset)
             self._temp_display.y_range = new_y_range
             self._temp_display.y_range.update()
             

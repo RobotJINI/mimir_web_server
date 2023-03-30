@@ -60,7 +60,7 @@ class UvController:
     def update(self, cds_dataframe):
         dict = {
                 'time': cds_dataframe.data['time'],
-                'uv': cds_dataframe.data['uv'],
+                'uv': self._cwf.process(cds_dataframe.data['uv']),
                 'uv_risk_lv': cds_dataframe.data['uv_risk_lv']
                }
         cds = ColumnDataSource(data=dict)
@@ -75,7 +75,7 @@ class WindSpeedController:
     def update(self, cds_dataframe):
         dict = {
                 'time': cds_dataframe.data['time'],
-                'wind_speed': cds_dataframe.data['wind_speed']
+                'wind_speed': self._cwf.process(cds_dataframe.data['wind_speed'])
                }
         cds = ColumnDataSource(data=dict)
         self._view.update_plot(cds)    
