@@ -18,6 +18,10 @@ class HumidityDisplay():
         
         self._humidity_display.x_range = DataRange1d(range_padding=0.0)
         
+        # Set initial y-axis range
+        y_range = Range1d(start=0, end=100)
+        self._humidity_display.y_range = y_range
+        
         self._humidity_display.title.text = 'Humidity'
         self._humidity_display.title.align = 'center'
         self._humidity_display.title.text_font_size = '20pt'
