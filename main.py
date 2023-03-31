@@ -21,7 +21,7 @@ class MimirWebServer:
     def _build_ui(self): 
         self._display_controller = DisplayController()
 
-        curdoc().add_root(self._display_controller.ui)
+        curdoc().add_root(self._display_controller.view())
 
         curdoc().add_periodic_callback(self.update, 5000)
         curdoc().title = "Mimir Weather Station"

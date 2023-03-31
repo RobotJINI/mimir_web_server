@@ -124,10 +124,11 @@ class DisplayController:
         
         current_weather_block =  self._current_weather.make_plot('Updating....')
         
-        self.ui = column(
+        self._view = column(
             current_weather_block,
             row(self._plot_controllers['temp'].get_ui(), self._plot_controllers['pressure'].get_ui(), self._plot_controllers['humidity'].get_ui()),
-            row(self._plot_controllers['uv'].get_ui(), self._plot_controllers['wind'].get_ui(), self._plot_controllers['rain'].get_ui())
+            row(self._plot_controllers['uv'].get_ui(), self._plot_controllers['wind'].get_ui(), self._plot_controllers['rain'].get_ui()),
+            sizing_mode='stretch_width'
             )
         
         self._tf = TimeFilter()
@@ -145,6 +146,9 @@ class DisplayController:
         
         for controller in self._plot_controllers.values():
             controller.update(hw_cds)
+            
+    def view(self):
+        return self._view
         
     def __del__(self):
         if self._db_sync_thread and self._db_sync_thread.is_alive():
