@@ -1,6 +1,4 @@
 from bokeh.models import ColumnDataSource, Range1d, Span, DataRange1d
-from bokeh.models.widgets import DataTable, TableColumn, NumberFormatter, Paragraph
-from bokeh.layouts import column
 from bokeh.plotting import figure
 from model.theme import DefaultTheme
 

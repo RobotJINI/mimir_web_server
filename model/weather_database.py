@@ -52,9 +52,9 @@ class WeatherDatabase:
                                                   'FROM weather_measurement ' + \
                                                   'WHERE time BETWEEN %s AND %s;'
                                                   
-        self._historical_weather_template = 'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed ' + \
+        self._historical_weather_template = 'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, rainfall ' + \
                                             'FROM (' + \
-                                            'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, ROW_NUMBER() OVER () AS row_num ' + \
+                                            'SELECT time, air_temp, pressure, humidity, ground_temp, uv, uv_risk_lv, wind_speed, rainfall, ROW_NUMBER() OVER () AS row_num ' + \
                                             'FROM weather_measurement ' + \
                                             'WHERE time BETWEEN %s AND %s' + \
                                             ') subquery ' + \
@@ -160,7 +160,9 @@ class WeatherDatabase:
             'ground_temp': [float(db_measurement['ground_temp']) for db_measurement in query_response],
             'uv': [float(db_measurement['uv']) for db_measurement in query_response],
             'uv_risk_lv': [str(db_measurement['uv_risk_lv']) for db_measurement in query_response],
-            'wind_speed': [float(db_measurement['wind_speed']) for db_measurement in query_response]
+            'wind_speed': [float(db_measurement['wind_speed']) for db_measurement in query_response],
+            'rainfall': [float(db_measurement['rainfall']) for db_measurement in query_response],
+            'rain_rate': [float(db_measurement['rainfall']) for db_measurement in query_response]
         }
         return ColumnDataSource(data=measurement_dict)
     

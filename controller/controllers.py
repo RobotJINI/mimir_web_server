@@ -1,5 +1,5 @@
 import threading
-from controller.filters import CoreWeatherFilter, TimeFilter
+from controller.filters import CoreWeatherFilter, TimeFilter, RainFilter
 from model.weather_database import WeatherDatabase
 from model.weather_database_sync import WeatherDatabaseSync
 import numpy as np
@@ -70,7 +70,7 @@ class UvController:
 class WindSpeedController:
     def __init__(self, view):
         self._view = view
-        self._cwf = CoreWeatherFilter()
+        self._cwf = CoreWeatherFilter(window_size=800)
         
     def update(self, cds_dataframe):
         dict = {
@@ -78,11 +78,26 @@ class WindSpeedController:
                 'wind_speed': self._cwf.process(cds_dataframe.data['wind_speed'])
                }
         cds = ColumnDataSource(data=dict)
-        self._view.update_plot(cds)    
+        self._view.update_plot(cds)
+        
+
+class RainController:
+    def __init__(self, view):
+        self._view = view
+        self._rf = RainFilter()
+        
+    def update(self, cds_dataframe):
+        rainfall, times = self._rf.process(cds_dataframe.data['rainfall'], cds_dataframe.data['time'])
+        dict = {
+                'time': times,
+                'rainfall': rainfall
+               }
+        cds = ColumnDataSource(data=dict)
+        self._view.update_plot(cds)
         
         
 class DisplayController:
-    def __init__(self, current_weather, temperature_display, pressure_display, humidity_display, uv_display, wind_speed_display):
+    def __init__(self, current_weather, temperature_display, pressure_display, humidity_display, uv_display, wind_speed_display, rainfall_display):
         self._weather_db = WeatherDatabase()
         
         self._current_weather = current_weather
@@ -91,6 +106,7 @@ class DisplayController:
         self._humidity_controller = HumidityController(humidity_display)
         self._uv_controller = UvController(uv_display)
         self._wind_speed_controller = WindSpeedController(wind_speed_display)
+        self._rainfall_controller = RainController(rainfall_display)
         
         self._tf = TimeFilter()
         
@@ -110,6 +126,7 @@ class DisplayController:
         self._humidity_controller.update(hw_cds)
         self._uv_controller.update(hw_cds)
         self._wind_speed_controller.update(hw_cds)
+        self._rainfall_controller.update(hw_cds)
         
     def __del__(self):
         if self._db_sync_thread and self._db_sync_thread.is_alive():
