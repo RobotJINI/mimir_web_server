@@ -75,7 +75,7 @@ class WeatherDatabase:
         self._select_bounds_template = 'SELECT %s FROM weather_measurement ORDER BY %s %s LIMIT 100;'
         
         self._approx_max_returns = 2000                                          
-        credentials_file = os.path.join(os.path.dirname(__file__), "../config/credentials.mysql")                                  
+        credentials_file = os.path.join(os.path.dirname(__file__), '../config/credentials.mysql')                                  
         self._credentials = self._load_credentials(credentials_file)
         self._db = MysqlDatabase(self._credentials)
                                           
@@ -118,7 +118,7 @@ class WeatherDatabase:
         end_time = get_time_ms()
         start_time = end_time - (duration * 1000)
         params = (start_time, end_time)
-        return self._db.query(self._current_weather_template % params)
+        return self._db.query(self._current_weather_template % params)[0]
 
     def get_latest_uv_risk(self):
         query_response = self._db.query(self._latest_uv_template)

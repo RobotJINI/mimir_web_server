@@ -239,7 +239,6 @@ class UvPlot(BasePlot):
         )
         
         self._plot.add_tools(hover_tool)
-        
     
 
     def update_plot(self, cds):

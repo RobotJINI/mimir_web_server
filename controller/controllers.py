@@ -13,7 +13,7 @@ class BasePlotController:
     def __init__(self):
         self._view = None
         
-    def get_ui(self):
+    def get_view(self):
         return self._view.get_plot()
 
 
@@ -122,12 +122,10 @@ class DisplayController:
                                     'rain': RainController()
                                  }
         
-        current_weather_block =  self._current_weather.make_plot('Updating....')
-        
         self._view = column(
-            current_weather_block,
-            row(self._plot_controllers['temp'].get_ui(), self._plot_controllers['pressure'].get_ui(), self._plot_controllers['humidity'].get_ui()),
-            row(self._plot_controllers['uv'].get_ui(), self._plot_controllers['wind'].get_ui(), self._plot_controllers['rain'].get_ui()),
+            self._current_weather.get_view(),
+            row(self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view()),
+            row(self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()),
             sizing_mode='stretch_width'
             )
         
@@ -139,7 +137,7 @@ class DisplayController:
         
     def update(self):
         cur_weather_resp = self._weather_db.get_current_weather() 
-        self._current_weather.update_plot(cur_weather_resp)
+        self._current_weather.update(cur_weather_resp)
               
         hw_cds = self._weather_db.get_historical_weather(sub_sample=False)
         hw_cds.data['time'] = self._tf.process(hw_cds.data['time'])
