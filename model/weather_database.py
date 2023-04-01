@@ -74,7 +74,7 @@ class WeatherDatabase:
                                           
         self._select_bounds_template = 'SELECT %s FROM weather_measurement ORDER BY %s %s LIMIT 100;'
         
-        self._approx_max_returns = 2000                                          
+        self._approx_max_returns = 10000                                          
         credentials_file = os.path.join(os.path.dirname(__file__), '../config/credentials.mysql')                                  
         self._credentials = self._load_credentials(credentials_file)
         self._db = MysqlDatabase(self._credentials)
@@ -102,7 +102,7 @@ class WeatherDatabase:
         if end_time is None:
             end_time = get_time_ms()
         if start_time is None:
-            start_time = end_time - 86400000 * 5# 1 day ms
+            start_time = end_time - 86400000 * 7# 1 day ms
             
         count = self._get_historical_weather_count(start_time, end_time)
         modulus = 1

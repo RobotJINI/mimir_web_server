@@ -7,7 +7,7 @@ from bokeh.models.tools import WheelZoomTool, PanTool
 class BasePlot:
     def __init__(self):
         self._plot = figure(x_axis_type='datetime', 
-                            toolbar_location='above', 
+                            toolbar_location='below', 
                             tools=['pan', 'box_zoom', 'save', 'reset'], 
                             active_drag=None)
         
@@ -239,7 +239,6 @@ class UvPlot(BasePlot):
         )
         
         self._plot.add_tools(hover_tool)
-    
 
     def update_plot(self, cds):
         if self._plot is not None:
