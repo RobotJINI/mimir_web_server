@@ -28,6 +28,7 @@ class MimirWebServer:
         # Generate the HTML code for the Bokeh application with the CDN resources included
         html = file_html(layout, CDN, "Mimir Weather Station")
         curdoc().html = html
+        curdoc().theme = 'caliber'
 
     def update(self):
          self._display_controller.update()

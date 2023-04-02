@@ -126,7 +126,7 @@ class DisplayController:
             self._current_weather.get_view(),
             row(self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view()),
             row(self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()),
-            sizing_mode='stretch_width'
+            sizing_mode='stretch_both'
             )
         
         self._tf = TimeFilter()
