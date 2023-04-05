@@ -1,22 +1,22 @@
 from bokeh.models import ColumnDataSource
 from bokeh.models.widgets import Div
-from bokeh.layouts import grid
+from bokeh.layouts import grid, row
 import os
 
 
 class InfoDiv():
     def __init__(self, label, input_template, data='0'):
+        self._label_style = '"font-weight: bold; margin-right: 5px; float: left;"'
+        self._value_style = '"text-align: right; float: right;"'
         self._template = self._create_template(label, input_template)
-        self.div = Div(text=self._template.format(data), flow_mode='inline', 
-                       styles={'font-size': '20px', 'text-align': 'center', 'padding': '10px', 
-                               'border-bottom': '1px solid gray', 'display': 'inline-flex',
-                               'justify-content': 'space-between', 'width': '100%'})
+        self.div = Div(text=self._template.format(data), styles={'border-bottom': '1px solid gray', 'display': 'inline-flex',
+                                                                  'justify-content': 'space-between', 'width': '100%'})
     
     def update(self, data):
         self.div.text = self._template.format(data)
         
     def _create_template(self, label, input_template):
-        return f'<div>{label}</div><div>{input_template}</div>'
+        return f'<span style={self._label_style}\">{label}</span><span style={self._value_style}>{input_template}</span>'
 
 
 class CurrentWeather():
@@ -24,15 +24,15 @@ class CurrentWeather():
         self._create_view()
 
     def _create_view(self):     
-        self._air_temp = InfoDiv('Air Temp:', '{}&deg;F')
-        self._pressure = InfoDiv('Pressure:', '{} mb')
-        self._humidity = InfoDiv('Humidity:', '{}%')
-        self._ground_temp = InfoDiv('Gnd Temp:', '{}&deg;F')
-        self._uv = InfoDiv('UV:', '{}')
+        self._air_temp = InfoDiv('Air Temp: ', '{}&deg;F')
+        self._pressure = InfoDiv('Pressure: ', '{} mb')
+        self._humidity = InfoDiv('Humidity: ', '{}%')
+        self._ground_temp = InfoDiv('Gnd Temp: ', '{}&deg;F')
+        self._uv = InfoDiv('UV: ', '{}')
         self._wind_speed = InfoDiv('Wind Speed:', '{} mph')
-        self._gust = InfoDiv('Gust:', '{} mph')
-        self._rainfall = InfoDiv('Rainfall:', '{} in')
-        self._rain_rate = InfoDiv('Rain Rate:', '{} in/hr')
+        self._gust = InfoDiv('Gust: ', '{} mph')
+        self._rainfall = InfoDiv('Rainfall: ', '{} in')
+        self._rain_rate = InfoDiv('Rain Rate: ', '{} in/hr')
         
         self._cur_weather = grid([self._air_temp.div, self._ground_temp.div, self._pressure.div, self._humidity.div, 
                                   self._uv.div, self._wind_speed.div, self._gust.div, self._rainfall.div, self._rain_rate.div], 

@@ -1,0 +1,26 @@
+.info-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.info-column {
+    flex: 1;
+    max-width: 300px;
+    margin: 0 10px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.value {
+    text-align: right;
+}

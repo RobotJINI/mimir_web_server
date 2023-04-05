@@ -1,46 +1,71 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-			<div class='widget-div'>
-			    <span class='widget-label'>Air Temperature:</span>
-			    <span class='widget-value'>{air_temp}&deg;F</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Pressure:</span>
-			    <span class='widget-value'>{pressure} mb</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Humidity:</span>
-			    <span class='widget-value'>{humidity}%</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Ground Temperature:</span>
-			    <span class='widget-value'>{ground_temp}&deg;F</span>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-6 offset-md-3">
-			<div class='widget-div'>
-			    <span class='widget-label'>UV:</span>
-			    <span class='widget-value'>{uv}</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Wind Speed:</span>
-			    <span class='widget-value'>{wind_speed} mph</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Gust:</span>
-			    <span class='widget-value'>{gust} mph</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Rainfall:</span>
-			    <span class='widget-value'>{rainfall} in</span>
-			</div>
-			<div class='widget-div'>
-			    <span class='widget-label'>Rain Rate:</span>
-			    <span class='widget-value'>{rain_rate} in/hr</span>
-			</div>
-		</div>
-	</div>
+<style>
+	.info-container {
+	    display: flex;
+	    flex-wrap: wrap;
+	    justify-content: center;
+	}
+	
+	.info-column {
+	    flex: 1;
+	    max-width: 300px;
+	    margin: 0 10px;
+	}
+	
+	.info-row {
+	    display: flex;
+	    justify-content: space-between;
+	    margin: 5px 0;
+	}
+	
+	.label {
+	    font-weight: bold;
+	    margin-right: 5px;
+	}
+	
+	.value {
+	    text-align: right;
+	}
+</style>
+
+<div class="info-container">
+    <div class="info-column">
+        <div class="info-row">
+            <span class="label">Air Temp:</span>
+            <span class="value">{air_temp}&deg;F</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Pressure:</span>
+            <span class="value">{pressure} mb</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Humidity:</span>
+            <span class="value">{humidity}%</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Gnd Temp:</span>
+            <span class="value">{ground_temp}&deg;F</span>
+        </div>
+    </div>
+    <div class="info-column">
+        <div class="info-row">
+            <span class="label">UV:</span>
+            <span class="value">{uv}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Wind Speed:</span>
+            <span class="value">{wind_speed} mph</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Gust:</span>
+            <span class="value">{gust} mph</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Rainfall:</span>
+            <span class="value">{rainfall} in</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Rain Rate:</span>
+            <span class="value">{rain_rate} in/hr</span>
+        </div>
+    </div>
 </div>
