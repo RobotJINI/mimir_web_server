@@ -52,3 +52,16 @@ class RainFilter:
         #convert to inches from mm
         rainfall_per_hour[:] = [x / self._mm_per_inch for x in rainfall_per_hour]
         return rainfall_per_hour, times_per_hour
+    
+
+class CurrentWeatherFilter:
+    def __init__(self, precision=1):
+        self._precision = precision
+        
+    def process(self, dataframe):
+        for key in dataframe:
+            if dataframe[key] is None:
+                dataframe[key] = 0.0
+            else:
+                dataframe[key] = round(float(dataframe[key]), self._precision)
+        return dataframe

@@ -1,5 +1,5 @@
 import threading
-from controller.filters import CoreWeatherFilter, TimeFilter, RainFilter
+from controller.filters import CoreWeatherFilter, TimeFilter, RainFilter, CurrentWeatherFilter
 from model.weather_database import WeatherDatabase
 from model.weather_database_sync import WeatherDatabaseSync
 from view.current_weather import CurrentWeather
@@ -105,13 +105,27 @@ class RainController(BasePlotController):
                }
         cds = ColumnDataSource(data=dict)
         self._view.update_plot(cds)
+      
+        
+class CurrentWeatherController():
+    def __init__(self, weather_db):
+        self._view = CurrentWeather()
+        self._weather_db = weather_db
+        self._cwf = CurrentWeatherFilter()
+        
+    def update(self):
+        cur_weather_resp = self._weather_db.get_current_weather() 
+        self._view.update(self._cwf.process(cur_weather_resp))
+        
+    def get_view(self):
+        return self._view.get_view()
         
         
 class DisplayController:
     def __init__(self):
         self._weather_db = WeatherDatabase()
         
-        self._current_weather = CurrentWeather()
+        self._current_weather_controller = CurrentWeatherController(self._weather_db)
         
         self._plot_controllers = {
                                     'temp': TemperatureController(),
@@ -123,7 +137,7 @@ class DisplayController:
                                  }
         
         self._view = column(
-            self._current_weather.get_view(),
+            self._current_weather_controller.get_view(),
             row(self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view()),
             row(self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()),
             sizing_mode='stretch_both'
@@ -136,8 +150,7 @@ class DisplayController:
         self._db_sync_thread.start()
         
     def update(self):
-        cur_weather_resp = self._weather_db.get_current_weather() 
-        self._current_weather.update(cur_weather_resp)
+        self._current_weather_controller.update()
               
         hw_cds = self._weather_db.get_historical_weather(sub_sample=False)
         hw_cds.data['time'] = self._tf.process(hw_cds.data['time'])
