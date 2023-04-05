@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import datetime
+from datetime import datetime
 from scipy.signal import savgol_filter
 
 
@@ -36,7 +36,7 @@ class RainFilter:
         # Iterate over input data
         for i in range(len(rainfall)):
             # Convert epoch time to datetime object
-            dt = datetime.datetime.fromtimestamp(times[i] / 1000)
+            dt = datetime.fromtimestamp(times[i] / 1000)
             # Round down to the nearest hour
             hour = dt.replace(minute=0, second=0, microsecond=0)
             # Add rainfall data to list
@@ -62,6 +62,10 @@ class CurrentWeatherFilter:
         for key in dataframe:
             if dataframe[key] is None:
                 dataframe[key] = 0.0
+            elif key == 'time':
+                dt = datetime.fromtimestamp(dataframe[key] / 1000)
+                dataframe[key] = dt.strftime("%m/%d/%Y %H:%M")
             else:
                 dataframe[key] = round(float(dataframe[key]), self._precision)
         return dataframe
+    

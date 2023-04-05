@@ -118,7 +118,9 @@ class WeatherDatabase:
         end_time = get_time_ms()
         start_time = end_time - (duration * 1000)
         params = (start_time, end_time)
-        return self._db.query(self._current_weather_template % params)[0]
+        result = self._db.query(self._current_weather_template % params)[0]
+        result['time'] = end_time
+        return result
 
     def get_latest_uv_risk(self):
         query_response = self._db.query(self._latest_uv_template)

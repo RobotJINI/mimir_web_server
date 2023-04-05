@@ -15,7 +15,7 @@ class BasePlot:
         
         self._plot.x_range = DataRange1d(range_padding=0.0)
         self._plot.title.align = 'center'
-        self._plot.title.text_font_size = '20pt'
+        self._plot.title.text_font_size = '14pt'
         
         self._make_plot()
         

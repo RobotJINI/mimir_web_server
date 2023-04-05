@@ -137,8 +137,10 @@ class DisplayController:
                                  }
         
         self._view = column(
-            grid([column(self._current_weather_controller.get_view(), align='center'), self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view(),
-                  self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()],
+            grid([self._current_weather_controller.get_view(), self._plot_controllers['temp'].get_view(), 
+                  self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view(),
+                  self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), 
+                  self._plot_controllers['rain'].get_view()],
                   ncols=3),
             styles={'padding': '5px'}
             )
