@@ -6,7 +6,7 @@ from view.current_weather import CurrentWeather
 from view.plots import HumidityPlot, PressurePlot, RainfallPlot, TemperaturePlot, UvPlot, WindSpeedPlot
 import numpy as np
 from bokeh.models import ColumnDataSource
-from bokeh.layouts import column, row
+from bokeh.layouts import column, row, grid
 
 
 class BasePlotController:
@@ -137,10 +137,10 @@ class DisplayController:
                                  }
         
         self._view = column(
-            self._current_weather_controller.get_view(),
-            row(self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view()),
-            row(self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()),
-            sizing_mode='stretch_both'
+            grid([column(self._current_weather_controller.get_view(), align='center'), self._plot_controllers['temp'].get_view(), self._plot_controllers['pressure'].get_view(), self._plot_controllers['humidity'].get_view(),
+                  self._plot_controllers['uv'].get_view(), self._plot_controllers['wind'].get_view(), self._plot_controllers['rain'].get_view()],
+                  ncols=3),
+            styles={'padding': '5px'}
             )
         
         self._tf = TimeFilter()
